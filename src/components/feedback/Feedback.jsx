@@ -1,10 +1,8 @@
+// Feedback.jsx
+import React from 'react';
 import styles from './Feedback.module.css';
 
-const Feedback = ({ feedback, totalFeedback }) => {
-  const percentagePositive = Math.round(
-    ((feedback.good + feedback.neutral) / totalFeedback) * 100
-  );
-
+const Feedback = ({ feedback, totalFeedback, percentagePositive }) => {
   return (
     <div className={styles.feedback}>
       <h2>Feedback statistics:</h2>
