@@ -4,6 +4,7 @@
   margin-bottom: 24px;
 }
 .options button {
+  cursor: pointer;
   border-radius: 8px;
   border: none;
   background-color: rgb(189, 185, 213);
