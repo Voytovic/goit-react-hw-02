@@ -1,3 +1,4 @@
+// App.jsx
 import { useState, useEffect } from 'react';
 import './App.css';
 import Options from './components/options/Options';
@@ -30,6 +31,10 @@ const App = () => {
     localStorage.setItem('feedback', JSON.stringify(feedback));
   }, [feedback]);
 
+  const percentagePositive = Math.round(
+    ((feedback.good + feedback.neutral) / totalFeedback) * 100
+  );
+
   return (
     <div>
       <Description />
@@ -39,7 +44,13 @@ const App = () => {
         totalFeedback={totalFeedback}
       />
       {totalFeedback > 0 ? (
-        <Feedback feedback={feedback} totalFeedback={totalFeedback} />
+        <Feedback
+          feedback={feedback}
+          totalFeedback={totalFeedback}
+          percentagePositive={
+            isNaN(percentagePositive) ? 0 : percentagePositive
+          }
+        />
       ) : (
         <Notification message="No feedback given yet." />
       )}
