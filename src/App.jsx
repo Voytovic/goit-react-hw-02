@@ -1,26 +1,60 @@
-import Profile from './components/profile/Profile.jsx';
-import FriendList from './components/friendList/FriendList.jsx';
-import TransactionHistory from './components/transactionHistory/TransactionHistory.jsx';
-import userData from './userData.json';
-import friends from './friends.json';
-import transactions from './transactions.json';
+import { useState, useEffect } from 'react';
 import './App.css';
+import Options from './components/options/OptionsHistory';
+import Feedback from './components/feedback/Feedback';
+import Notification from './components/notification/Notification';
+import Description from './components/description/description';
 
-export default function App() {
+const App = () => {
+  const [feedback, setFeedback] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  });
+
+  useEffect(() => {
+    const savedFeedback = localStorage.getItem('feedback');
+    if (savedFeedback) {
+      setFeedback(JSON.parse(savedFeedback));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('feedback', JSON.stringify(feedback));
+  }, [feedback]);
+
+  const updateFeedback = feedbackType => {
+    setFeedback(prevFeedback => ({
+      ...prevFeedback,
+      [feedbackType]: prevFeedback[feedbackType] + 1,
+    }));
+  };
+
+  const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+
+  const resetFeedback = () => {
+    setFeedback({
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    });
+  };
+
   return (
-    <>
-      <p className="title">Task 1</p>
-      <Profile
-        name={userData.username}
-        tag={userData.tag}
-        location={userData.location}
-        image={userData.avatar}
-        stats={userData.stats}
+    <div>
+      <Description />
+      <Options
+        updateFeedback={updateFeedback}
+        resetFeedback={resetFeedback}
+        totalFeedback={totalFeedback}
       />
-      <p className="title">Task 2</p>
-      <FriendList friends={friends} />
-      <p className="title">Task 3</p>
-      <TransactionHistory items={transactions} />
-    </>
+      {totalFeedback > 0 ? (
+        <Feedback feedback={feedback} totalFeedback={totalFeedback} />
+      ) : (
+        <Notification message="No feedback given yet." />
+      )}
+    </div>
   );
-}
+};
+
+export default App;
